@@ -1,0 +1,59 @@
+---
+title: "reportCovid"
+author: "Anna"
+format: html
+editor: visual
+date: today
+---
+
+```{r}
+#| output: false
+# load libraries
+library(here)
+library(tidyverse)
+library(lubridate)
+library(unibeCols)
+```
+
+```{r}
+ebola <- read_csv("/Users/anna/Desktop/Uni:Learing/Visualization_R/data/raw/ebola.csv")
+
+ebola_date_beforeMarch15 <- ebola %>% filter(Date <= ymd("2015-03-31") 
+                                       & (Country == "Mali" | Country == "Sierra Leone" | Country == "United Kingdom"))
+
+```
+
+This figure show the ebola cases in Mali, Sierra Leone and the United Kingdom before 31.03.2015
+```{r}
+#| label: fig-ebola0315
+#| fig-cap: "Ebola cases in Mali, Sierra Leone and the United Kingdom before 03.03.2015."
+#| fig-width: 8
+#| fig-height: 4
+ggplot(data = ebola_date_beforeMarch15, 
+                      mapping = aes(x = Date, y = Cum_conf_cases)) + 
+  geom_line(mapping = aes(color = Country)) +
+  labs(title ="Ebola Cases (Mali, Sierra Leone, United Kingdom)",
+       x = "Date", 
+       y ="Confirmed Cases (comulative)")
+```
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
