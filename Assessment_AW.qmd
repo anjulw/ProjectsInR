@@ -1,0 +1,204 @@
+---
+title: "Ebola Cases over the years 2014-2016 (Assessment_AW)"
+author: "Anna Wyss"
+format: html
+editor: visual
+date: today
+fromat: 
+  html:
+    embeded-resources: true
+---
+
+```{r}
+#| output: false
+#| echo: false
+#| message: false
+#| warning: false
+# load libraries
+library(here)
+library(tidyverse)
+library(lubridate)
+library(unibeCols)
+library(htmlTable)
+library(knitr)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+ebola <- read_csv("/Users/anna/Desktop/Uni:Learing/Visualization_R/ProjectsInR/data/raw/ebola.csv")
+
+#create subset for each year (2014, 2015, 2016) and over the whole timeperiod for the countries Liberia, Sierra Leone, United Kingdom, Spain
+ebola_date_2014 <- ebola %>% filter(Date >= ymd("2014-08-29") & Date <= ymd("2014-12-31")
+                                       & (Country == "Liberia" | Country == "Sierra Leone" | Country == "United Kingdom" | Country == "Spain"))
+
+
+ebola_date_2015 <- ebola %>% filter(Date >= ymd("2015-01-01") & Date <= ymd("2015-12-31")
+                                       & (Country == "Liberia" | Country == "Sierra Leone" | Country == "United Kingdom" | Country == "Spain"))
+
+
+ebola_date_2016 <- ebola %>% filter(Date >= ymd("2016-01-01") & Date <= ymd("2016-12-31")
+                                       & (Country == "Liberia" | Country == "Sierra Leone" | Country == "United Kingdom" | Country == "Spain"))
+
+ebola_date_total <- ebola %>% filter((Country == "Liberia" | Country == "Sierra Leone" | Country == "United Kingdom" | Country == "Spain"))
+```
+
+## Aim of the Report
+In this report ebola labratory-confirmed cases in Liberia, Sierra Leone, the United Kingdom and Spain will be investigated for the years 2014 - 2016. The ebola data set is downloaded form the [Projects in R Repository](https://github.com/ISPMBern/projects-in-R/tree/main/data). 
+
+## Labratory-confirmed Cases over the Years
+### Year 2014
+Please note that the data collection only started in August 2014. In @fig-ebola14 the development from end of August 2014 to December 2014 is displayed. A rapid increase in cases in Sierra Leone and a slight increase in Liberia and no increase in Spain is observable. For the United Kingdome no ebola infection was reported during this time period. 
+```{r}
+#| label: fig-ebola14
+#| fig-cap: "Confirmed Ebola Cases (Liberia, Sierra Leone, United Kingdom, Spain) in 2014. Please note that there no ebola case in the United Kingdome in 2014."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+country_shapes <- c("Liberia" = 0, 
+                    "Sierra Leone" = 1, 
+                    "United Kingdom" = 2, 
+                    "Spain" = 8)
+
+ggplot(data = ebola_date_2014, 
+       mapping = aes(x = Date, y = Cum_conf_cases, color = Country, shape = Country)) + 
+  geom_point(size = 1, stroke = 1) +
+  scale_color_brewer(palette = "Accent") +
+  scale_shape_manual(values = country_shapes) +
+  labs(title = "Ebola Cases (Liberia, Sierra Leone, Spain) in 2014",
+       x = "Date", 
+       y = "Confirmed Cases (cumulative)")
+
+```
+```{r}
+#| label: tbl-ebola14
+#| tbl-cap: "Exact numbers of labratory-confirmed cases in each country on 31.12.2014."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+tbl14 <- ebola_date_2014 %>%
+  group_by(Country) %>%
+  summarize(Cum_conf_cases = max(Cum_conf_cases))
+
+kable(tbl14, caption = "", col.names = c("Country", "Total 31.12.2014"))
+```
+
+
+### Year 2015
+In @fig-ebola15 a stabilization at a high number of laboratory-confirmed cases in Sierra Leone and stabilization at a mediate number of cases in Liberia can be observed. Again, there are no cases in Spain and also no in the United Kingdom.
+```{r}
+#| label: fig-ebola15
+#| fig-cap: "Confirmed Ebola Cases (Liberia, Sierra Leone, United Kingdom, Spain) in 2015."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+ggplot(data = ebola_date_2015, 
+       mapping = aes(x = Date, y = Cum_conf_cases, color = Country, shape = Country)) + 
+  geom_point(size = 1, stroke = 1) +
+  scale_color_brewer(palette = "Accent") +
+  scale_shape_manual(values = country_shapes) +
+  labs(title = "Ebola Cases (Liberia, Sierra Leone, United Kingdom, Spain) in 2015",
+       x = "Date", 
+       y = "Confirmed Cases (cumulative)")
+
+```
+
+```{r}
+#| label: tbl-ebola15
+#| tbl-cap: "Exact numbers of labratory-confirmed cases in each country on 31.12.2015."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+tbl15 <- ebola_date_2015 %>%
+  group_by(Country) %>%
+  summarize(Cum_conf_cases = max(Cum_conf_cases))
+
+kable(tbl15, caption = "", col.names = c("Country", "Total 31.12.2015"))
+```
+
+
+### Year 2016
+Only very little data points are accessable for 2016. Please consider @fig-ebola16.
+```{r}
+#| label: fig-ebola16
+#| fig-cap: "Confirmed Ebola Cases (Liberia, Sierra Leone, United Kingdom, Spain) in 2016."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+ggplot(data = ebola_date_2016, 
+       mapping = aes(x = Date, y = Cum_conf_cases, color = Country, shape = Country)) + 
+  geom_point(size = 1, stroke = 1) +
+  scale_color_brewer(palette = "Accent") +
+  scale_shape_manual(values = country_shapes) +
+  labs(title = "Ebola Cases (Liberia, Sierra Leone, United Kingdom, Spain) in 2016",
+       x = "Date", 
+       y = "Confirmed Cases (cumulative)")
+
+
+```
+
+```{r}
+#| label: tbl-ebola16
+#| tbl-cap: "Exact numbers of labratory-confirmed cases in each country on 23.03.2016."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+tbl16 <- ebola_date_2016 %>%
+  group_by(Country) %>%
+  summarize(Cum_conf_cases = max(Cum_conf_cases))
+
+kable(tbl16, caption = "", col.names = c("Country", "Total 23.03.2016"))
+```
+### Timeperiod 2014 - 2016
+To get a more comprehensive picture of labratory-confirmed cases, please consider @fig-ebolatotal and @fig-colebolatotal. There, the labratory-confirmed cases over the timeperiod August 2014 - March 2016 are displayed.
+```{r}
+#| label: fig-ebolatotal
+#| fig-cap: "Confirmed Ebola Cases (Liberia, Sierra Leone, United Kingdom, Spain) from 2014-2016."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+ggplot(data = ebola_date_total, 
+       mapping = aes(x = Date, y = Cum_conf_cases, color = Country, shape = Country)) + 
+  geom_point(size = 1, stroke = 1) +
+  scale_color_brewer(palette = "Accent") +
+  scale_shape_manual(values = country_shapes) +
+  labs(title = "Ebola Cases (Liberia, Sierra Leone, United Kingdom, Spain) from 2014-2016",
+       x = "Date", 
+       y = "Confirmed Cases (cumulative)")
+```
+
+```{r}
+#| label: fig-colebolatotal
+#| fig-cap: "Ebola Cases (Liberia, Sierra Leone, United Kingdom, Spain) from 2014-2016."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+ggplot(data = ebola_date_total, 
+       mapping = aes(x = Date, y = Cum_conf_cases, color = Country, shape = Country)) + 
+  geom_col(size = 0.3) +
+  scale_color_brewer(palette = "Accent") +
+  labs(title = "Ebola Cases (Liberia, Sierra Leone, United Kingdom, Spain) from 2014-2016",
+       x = "Date", 
+       y = "Confirmed Cases (cumulative)")
+```
+## Conclusion
+In this report it can be obseverd that after an ebola outbreak (>1), there is an rapide increase in labratory-confirmed cases which stabilizes over the following years. It should be the main aim to prevent an ebola outbrake at any cost. 
+
